@@ -5,6 +5,7 @@ import os
 import time
 import random
 
+year = 102
 
 def getstudents(soup, url):
     connlist = []
@@ -23,7 +24,7 @@ def requestdata(url):
     with SB(uc=True) as sb:
         sb.driver.uc_open_with_reconnect(url, 4)
         data = sb.driver.page_source
-        sb.driver.quit()
+        #sb.driver.quit()
     return data
 
 
@@ -58,15 +59,15 @@ def getspector(soup):
 
 
 def main():
-    if not os.path.exists("./crossbystd/students.json"):
-        os.mkdir("./crossbystd")
-    with open("./crossbystd/students.json", "w") as f:
+    if not os.path.exists(f"./crossbystd_{year}/students.json"):
+        os.mkdir(f"./crossbystd_{year}")
+    with open(f"./crossbystd_{year}/students.json", "w") as f:
         json.dump(list([]), f)
-    uni_url = "https://www.com.tw/cross/university_list109.html"
+    uni_url = f"https://www.com.tw/cross/university_list{year}.html"
     response = requestdata(uni_url)
     soup = makesoup(response)
     university_dict = getuniversity(soup)
-    with open("./crossbystd/university.json", "w", encoding='utf8') as f:
+    with open(f"./crossbystd_{year}/university.json", "w", encoding='utf8') as f:
         json.dump(university_dict, f, ensure_ascii=False)
         print(university_dict)
     for key, val in university_dict.items():
@@ -80,13 +81,13 @@ def main():
             soup = makesoup(requestdata(val))
             sectors = getspector(soup)
         else:
-            with open("./crossbystd/log.txt", "a") as f:
+            with open(f"./crossbystd_{year}/log.txt", "a") as f:
                 f.write(f"Error: {key}\n")
             print(f"Error: {key}")
-        with open(f"./crossbystd/{key}.json", "w", encoding='utf8') as f:
+        with open(f"./crossbystd_{year}/{key}.json", "w", encoding='utf8') as f:
             json.dump(sectors, f, ensure_ascii=False)
 
-        with open("./crossbystd/students.json", "r", encoding='utf8') as f:
+        with open(f"./crossbystd_{year}/students.json", "r", encoding='utf8') as f:
             data = json.load(f)
         temp = []
         for sector in sectors.values():
@@ -104,7 +105,7 @@ def main():
             for i in range(3):
                 if "music" in sector:
                     print(f"music pass {sector}")
-                    with open("./crossbystd/log.txt", "a") as f:
+                    with open(f"./crossbystd_{year}/log.txt", "a") as f:
                         f.write(f"Error: {sector}\n")
                     break
                 if len(conn) != 0:
@@ -115,13 +116,13 @@ def main():
                 print(f"Retry {i + 1} times in {sector}...")
             else:
                 print(f"Error: {sector}")
-                with open("./crossbystd/log.txt", "a") as f:
+                with open(f"./crossbystd_{year}/log.txt", "a") as f:
                     f.write(f"Error: {sector}\n")
                 continue
             temp.append({node: conn})
             print(node, conn)
         data.extend(temp)
-        with open("./crossbystd/students.json", "w", encoding='utf8') as f:
+        with open(f"./crossbystd_{year}/students.json", "w", encoding='utf8') as f:
             json.dump(data, f, ensure_ascii=False)
         print(f"{key} finished\n")
 
