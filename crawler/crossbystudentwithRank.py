@@ -10,18 +10,38 @@ year = 102
 def getstudents(soup, url):
     connlist = []
     url = url.replace('https://www.com.tw/cross/', "")
-    for student in soup.find_all(colspan="4"):
-        temp = []
-        for sector in student.find_all(href=True):
-            if '大學' in sector.text and sector['href'] != url:
-                temp.append(sector['href'])
+    for rank,col in enumerate(soup.find_all('table', width='99%')[0].tbody.contents):
+        if col == '\n' or rank < 6:
+            continue
+        try:
+            temp = {}
+            temp['rank'] = (rank - 5) // 2 + 1
+            temp['self_url'] = url
+            temp['self_tag'] = col.contents[3].contents[0].img['src']
+            temp['edges'] = {} #{edge:[chinese name,accept,tag]}
+            for sector in col.find(colspan = "4").contents[0].find('table').tbody.contents:
+                if sector.text.replace('\n', '') == '':
+                    continue
+                temp['edges'][sector.contents[3].a['href']] = {
+                    'chinese_name': sector.contents[3].a.text,
+                    'accept': True if sector.contents[1].img != None else False,
+                    'tag': sector.contents[5].img['src'] if sector.contents[5].img != None else None
+                }
+        except:
+            log = open(f"./crossbystd_{year}/log.txt", "a")
+            log.write(f"Error: {url}\n")
+            log.close()
+            continue
+        print(temp,end='\n')
         connlist.append(temp)
+
+
 
     return url, connlist
 
 
 def requestdata(url):
-    with SB(uc=True,headless=True) as sb:
+    with SB(uc=True) as sb:
         sb.driver.uc_open_with_reconnect(url, 4)
         data = sb.driver.page_source
         #sb.driver.quit()
