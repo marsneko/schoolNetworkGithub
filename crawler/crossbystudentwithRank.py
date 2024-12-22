@@ -5,7 +5,7 @@ import os
 import time
 import random
 
-year = 102
+year = 103
 
 def getstudents(soup, url):
     connlist = []
