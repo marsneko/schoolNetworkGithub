@@ -39,7 +39,6 @@ def getstudents(soup, url):
         log = open(f"./crossbystd_{year}/log.txt", "a")
         log.write(f"Error: {url}\n")
         log.close()
-        connlist.append({'rank': None, 'self_url': url, 'self_tag': None, 'edges': {}})
 
     return url, connlist
 
