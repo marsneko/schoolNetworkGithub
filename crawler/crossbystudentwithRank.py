@@ -5,7 +5,7 @@ import os
 import time
 import random
 
-year = 102
+year = 109
 
 def getstudents(soup, url):
     connlist = []
@@ -44,7 +44,7 @@ def getstudents(soup, url):
 
 
 def requestdata(url):
-    with SB(uc=True) as sb:
+    with SB(uc=True,headless=True) as sb:
         sb.driver.uc_open_with_reconnect(url, 4)
         data = sb.driver.page_source
         #sb.driver.quit()
