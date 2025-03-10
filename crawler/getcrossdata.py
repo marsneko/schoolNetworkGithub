@@ -7,10 +7,10 @@ import os
 import time
 import random
 
-
+year = 109
 def requestdata(url):
     time.sleep(random.randint(1, 2))
-    with SB(uc=True) as sb:
+    with SB(uc=True,headless=True) as sb:
         sb.driver.uc_open_with_reconnect(url, 4)
         data = sb.driver.page_source
         #sb.driver.clear_session_storage()
@@ -67,7 +67,7 @@ def main():
         os.mkdir("./cross")
     with open("./cross/students.json", "w") as f:
         json.dump(list([]), f)
-    uni_url = "https://www.com.tw/cross/university_list109.html"
+    uni_url = f"https://www.com.tw/cross/university_list{year}.html"
     response = requestdata(uni_url)
     time.sleep(1)
     soup = makesoup(response)
@@ -135,3 +135,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+#%%
