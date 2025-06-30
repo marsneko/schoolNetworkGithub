@@ -1,6 +1,9 @@
 import delimited "/Users/eric/Documents/SchoolCourses/schoolNetworkGithub/analyzeCodes/tempdata/raw_in_out_cluster_with_sieve_109to107.csv",clear encoding(UTF-8)
 est clear
 
+*ssc install missings   
+missings dropvars, force
+
 gen diffmainsieve1_rank = main_sieve1_byassigment_rank - main_sieve1_byassigment_rank_108 
 gen diffmainsieve2_rank = main_sieve2_byassigment_rank - main_sieve2_byassigment_rank_108
 egen mean_mainsieve1 = mean(main_sieve1_byassigment),by(cluster)

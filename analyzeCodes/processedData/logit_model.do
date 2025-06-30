@@ -1,5 +1,6 @@
 import delimited "/Users/eric/Documents/SchoolCourses/schoolNetworkGithub/analyzeCodes/tempdata/raw_in_out_cluster_with_sieve_109to107.csv",clear encoding(UTF-8)
 est clear
+drop if missing()
 
 gen diffmainsieve1_rank = main_sieve1_byassigment_rank - main_sieve1_byassigment_rank_108 
 gen diffmainsieve2_rank = main_sieve2_byassigment_rank - main_sieve2_byassigment_rank_108
@@ -170,4 +171,4 @@ coefplot,base keep(_cons ?.cluster ) drop(1.cluster) ///
 		xline(0, lcolor(gs10))   						 ///
 		saving(p3,replace)
 
-*graph combine p1.gph p2.gph 
+graph combine p1.gph p2.gph 
